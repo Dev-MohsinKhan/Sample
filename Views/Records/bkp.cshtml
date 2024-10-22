@@ -1,0 +1,118 @@
+﻿@using InterviewTask.ViewModels
+@model Records
+
+<h2>Share Your Experience</h2>
+
+<form method="post" action="/Records/SaveSelection">
+    <select id="entityTypes" name="SelectedEntityTypeID" class="form-control">
+        <option value="">Select an Entity Type</option>
+        @foreach (var entityType in Model.EntityType)
+        {
+            <option value="@entityType.Id">@entityType.Name</option>
+        }
+    </select>
+
+    <div class="form-group">
+        <label for="regions">Region</label>
+        <select id="regions" name="SelectedRegionId" class="form-control">
+            <option value="">Select a Region</option>
+            @foreach (var region in Model.Regions)
+            {
+                <option value="@region.Id">@region.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="wiliyats">Wiliyat</label>
+        <select id="wiliyats" name="SelectedWiliyatId" class="form-control">
+            <option value="">Select a Wiliyat</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="areas">Area</label>
+        <select id="areas" name="SelectedAreaId" class="form-control">
+            <option value="">Select an Area</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="villages">Village</label>
+        <select id="villages" name="SelectedVillageId" class="form-control">
+            <option value="">Select a Village</option>
+        </select>
+    </div>
+
+    <!-- New Fields -->
+    <div class="form-group">
+        <label for="detailsODE">Details ODE</label>
+        <input type="text" id="detailsODE" name="DetailsODE" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="remarks">Remarks</label>
+        <textarea id="remarks" name="Remarks" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="Email" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="text" id="phoneNumber" name="PhoneNumber" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Load Wiliyats based on selected Region
+        $('#regions').change(function () {
+            var regionId = $(this).val();
+            if (regionId) {
+                $.get('/Records/GetWiliyatsByRegion', { regionId: regionId }, function (data) {
+                    $('#wiliyats').empty().append('<option value="">Select a Wiliyat</option>');
+                    $.each(data, function (index, wiliyat) {
+                        $('#wiliyats').append('<option value="' + wiliyat.id + '">' + wiliyat.name + '</option>');
+                    });
+                });
+            }
+        });
+
+        // Load Areas based on selected Wiliyat
+        $('#wiliyats').change(function () {
+            var wiliyatId = $(this).val();
+            if (wiliyatId) {
+                $.get('/Records/GetAreasByWiliyat', { wiliyatId: wiliyatId }, function (data) {
+                    $('#areas').empty().append('<option value="">Select an Area</option>');
+                    $.each(data, function (index, area) {
+                        $('#areas').append('<option value="' + area.id + '">' + area.name + '</option>');
+                    });
+                });
+            }
+        });
+
+        // Load Villages based on selected Area
+        $('#areas').change(function () {
+            var areaId = $(this).val();
+            if (areaId) {
+                $.get('/Records/GetVillagesByArea', { areaId: areaId }, function (data) {
+                    $('#villages').empty().append('<option value="">Select a Village</option>');
+                    $.each(data, function (index, village) {
+                        $('#villages').append('<option value="' + village.id + '">' + village.name + '</option>');
+                    });
+                });
+            }
+        });
+    });
+</script>

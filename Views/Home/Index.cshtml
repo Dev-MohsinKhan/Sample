@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string))
+{
+    <div class="alert alert-danger">
+        @Html.Raw(TempData["ErrorMessage"] as string)
+    </div>
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome To</h1>
+    <p>Mohsin Interview Task MVP </p>
+</div>

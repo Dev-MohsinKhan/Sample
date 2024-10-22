@@ -1,0 +1,143 @@
+﻿@model List<Item>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>My Customers</h2>
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name" class="form-control mb-3">
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="myTable">
+                <thead>
+                    <tr>
+                        <th style="width:30%;">Name</th> 
+                        <th style="width:10%;">Region</th>
+                        <th style="width:10%;">Wiliyat</th>
+                        <th style="width:10%;">Area</th>
+                        <th style="width:10%;">Village</th>
+                        <th style="width:10%;">Entity Type</th> 
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Name</td>  
+                            <td>@item.RegionName</td>
+                            <td>@item.WillayaName</td>
+                            <td>@item.AreaName</td>
+                            <td>@item.VillageName</td>
+                            <td>@item.EntityTypeName</td>
+                            
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination" id="paginationControls">
+                <!-- Pagination controls will be dynamically generated here -->
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        const rowsPerPage = 5; // Number of rows to display per page
+        let currentPage = 1;
+        let filteredRows = [];
+
+        function myFunction() {
+            const input = document.getElementById("myInput");
+            const filter = input.value.toUpperCase();
+            const tableBody = document.getElementById("tableBody");
+            const tr = tableBody.getElementsByTagName("tr");
+            filteredRows = []; // Reset the filtered rows
+
+            // Loop through all table rows
+            for (let i = 0; i < tr.length; i++) {
+                const td = tr[i].getElementsByTagName("td");
+                let rowContainsFilter = false;
+
+                // Loop through all cells in the current row
+                for (let j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        const txtValue = td[j].textContent || td[j].innerText; // Get the text content
+                        // Check if the text matches the filter
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowContainsFilter = true;
+                            break; // No need to check other cells in this row
+                        }
+                    }
+                }
+
+                // If the row contains the filter, add it to the filtered rows
+                if (rowContainsFilter) {
+                    filteredRows.push(tr[i]);
+                }
+            }
+            currentPage = 1; // Reset to first page
+            displayRows();
+            setupPagination();
+        }
+
+        function displayRows() {
+            const tableBody = document.getElementById("tableBody");
+            tableBody.innerHTML = ""; // Clear existing rows
+
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const rowsToDisplay = filteredRows.slice(start, end);
+
+            rowsToDisplay.forEach(row => {
+                tableBody.appendChild(row);
+            });
+        }
+
+        function setupPagination() {
+            const paginationControls = document.getElementById("paginationControls");
+            paginationControls.innerHTML = ""; // Clear existing pagination
+
+            const pageCount = Math.ceil(filteredRows.length / rowsPerPage);
+            const maxVisiblePages = 5; // Maximum number of pagination links to show
+            let startPage, endPage;
+
+            // Calculate the start and end page numbers
+            if (pageCount <= maxVisiblePages) {
+                startPage = 1;
+                endPage = pageCount;
+            } else {
+                const halfVisible = Math.floor(maxVisiblePages / 2);
+                startPage = Math.max(1, currentPage - halfVisible);
+                endPage = Math.min(pageCount, currentPage + halfVisible);
+
+                // Adjust start and end if they exceed the limits
+                if (startPage === 1) {
+                    endPage = maxVisiblePages;
+                } else if (endPage === pageCount) {
+                    startPage = pageCount - maxVisiblePages + 1;
+                }
+            }
+
+            // Generate pagination links
+            for (let i = startPage; i <= endPage; i++) {
+                const paginationItem = document.createElement("li");
+                paginationItem.className = "page-item";
+                const paginationLink = document.createElement("a");
+                paginationLink.className = "page-link";
+                paginationLink.href = "#";
+                paginationLink.textContent = i;
+                paginationLink.onclick = function () {
+                    currentPage = i;
+                    displayRows();
+                    setupPagination(); // Re-setup pagination to reflect current page
+                };
+                paginationItem.appendChild(paginationLink);
+                paginationControls.appendChild(paginationItem);
+            }
+        }
+    </script>
+</body>
