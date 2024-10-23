@@ -54,16 +54,16 @@ namespace InterviewTask.Controllers
         [HttpPost]
         public ActionResult SaveSelection(Records model)
         {
-            
-            if (model.SelectedRegionId!=null
-                &&model.SelectedVillageId!=null
-                &&model.SelectedAreaId!=null
-                &&model.SelectedAreaId!=null
-                &&model.DetailsODE!=null
-                &&model.Email!=null
-                &&model.PhoneNumber!=null
-                &&model.SelectedEntityTypeID!=null
-                &&model.Remarks!=null)
+
+            if (model.SelectedRegionId != null
+                && model.SelectedVillageId != null
+                && model.SelectedAreaId != null
+                && model.SelectedAreaId != null
+                && model.DetailsODE != null
+                && model.Email != null
+                && model.PhoneNumber != null
+                && model.SelectedEntityTypeID != null
+                && model.Remarks != null)
             {
                 var regionName = _context.Regions.Where(a => a.Id == model.SelectedRegionId).FirstOrDefault();
                 var willayaName = _context.Wiliyats.FirstOrDefault(w => w.Id == model.SelectedWiliyatId);
@@ -73,7 +73,7 @@ namespace InterviewTask.Controllers
 
                 var newItem = new Item
                 {
-                    Name = model.Name??"",
+                    Name = model.Name ?? "",
                     Email = model.Email,
                     PhoneNumber = model.PhoneNumber,
                     EntityType = model.SelectedEntityTypeID, // Use the correct field from the model
@@ -119,16 +119,39 @@ namespace InterviewTask.Controllers
         }
 
 
-        public ActionResult ListAll()
+        public ActionResult ListAll(Records records)
         {
+
+            var regions = _context.Regions.ToList();
+            var wiliyats = _context.Wiliyats.ToList();
+            var areas = _context.Areas.ToList();
+            var villages = _context.Villages.ToList();
 
             var itemsList = _context.Item.ToList();
 
 
+            if (records.SelectedVillageId > 0)
+                itemsList = itemsList.Where(a => a.Village == records.SelectedVillageId).ToList();
+            if (records.SelectedRegionId > 0)
+                itemsList = itemsList.Where(a => a.Region == records.SelectedRegionId).ToList();
+            if (records.SelectedWiliyatId > 0)
+                itemsList = itemsList.Where(a => a.Willaya == records.SelectedWiliyatId).ToList();
+            if (records.SelectedAreaId > 0)
+                itemsList = itemsList.Where(a => a.Area == records.SelectedAreaId).ToList();
 
+
+            var viewModel = new Records
+            {
+                Regions = regions,
+                Wiliyats = wiliyats,
+                Areas = areas,
+                Villages = villages,
+                Items = itemsList
+
+            };
 
             //var itemsList = itemsListFiltered;
-            return View(itemsList);
+            return View(viewModel);
 
 
 

@@ -40,7 +40,7 @@ namespace InterviewTask.Migrations
 
                     b.HasIndex("WiliyatId");
 
-                    b.ToTable("Areas");
+                    b.ToTable("Areas", (string)null);
                 });
 
             modelBuilder.Entity("InterviewTask.Models.EntityType", b =>
@@ -57,7 +57,7 @@ namespace InterviewTask.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EntityType");
+                    b.ToTable("EntityType", (string)null);
                 });
 
             modelBuilder.Entity("InterviewTask.Models.Item", b =>
@@ -125,7 +125,7 @@ namespace InterviewTask.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Item");
+                    b.ToTable("Item", (string)null);
                 });
 
             modelBuilder.Entity("InterviewTask.Models.Region", b =>
@@ -142,7 +142,7 @@ namespace InterviewTask.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Regions");
+                    b.ToTable("Regions", (string)null);
                 });
 
             modelBuilder.Entity("InterviewTask.Models.Village", b =>
@@ -164,7 +164,7 @@ namespace InterviewTask.Migrations
 
                     b.HasIndex("AreaId");
 
-                    b.ToTable("Villages");
+                    b.ToTable("Villages", (string)null);
                 });
 
             modelBuilder.Entity("InterviewTask.Models.Wiliyat", b =>
@@ -186,7 +186,7 @@ namespace InterviewTask.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Wiliyats");
+                    b.ToTable("Wiliyats", (string)null);
                 });
 
             modelBuilder.Entity("InterviewTask.Models.Area", b =>

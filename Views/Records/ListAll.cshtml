@@ -1,4 +1,5 @@
-﻿@model List<Item>
+﻿@using InterviewTask.ViewModels;
+@model Records
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,30 +9,74 @@
     <div class="container">
         <h2>My Customers</h2>
         <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name" class="form-control mb-3">
+        <form method="post" action="/Records/ListAll">
+            <div class="form-group">
+                <label for="regions">Region </label>
+                <select id="regions" name="SelectedRegionId" class="form-control">
+                    <option value="">Select a Region</option>
+                    @foreach (var region in Model.Regions)
+                    {
+                        <option value="@region.Id">@region.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="wiliyats">Wiliyat</label>
+                <select id="wiliyats" name="SelectedWiliyatId" class="form-control">
+                    <option value="">Select a Wiliyat</option>
+                    @foreach (var Wiliyats in Model.Wiliyats)
+                    {
+                        <option value="@Wiliyats.Id">@Wiliyats.Name</option>
+                    }
+                </select>
+            </div>
 
+            <div class="form-group">
+                <label for="areas">Area</label>
+                <select id="areas" name="SelectedAreaId" class="form-control">
+                    <option value="">Select an Area</option>
+                    @foreach (var Areas in Model.Areas)
+                    {
+                        <option value="@Areas.Id">@Areas.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="villages">Village</label>
+                <select id="villages" name="SelectedVillageId" class="form-control">
+                    <option value="">Select a Village</option>
+                    @foreach (var Villages in Model.Villages)
+                    {
+                        <option value="@Villages.Id">@Villages.Name</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
         <div class="table-responsive">
             <table class="table table-bordered" id="myTable">
                 <thead>
                     <tr>
-                        <th style="width:30%;">Name</th> 
+                        <th style="width:30%;">Name</th>
                         <th style="width:10%;">Region</th>
                         <th style="width:10%;">Wiliyat</th>
                         <th style="width:10%;">Area</th>
                         <th style="width:10%;">Village</th>
-                        <th style="width:10%;">Entity Type</th> 
+                        <th style="width:10%;">Entity Type</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.Items)
                     {
                         <tr>
-                            <td>@item.Name</td>  
+                            <td>@item.Name</td>
                             <td>@item.RegionName</td>
                             <td>@item.WillayaName</td>
                             <td>@item.AreaName</td>
                             <td>@item.VillageName</td>
                             <td>@item.EntityTypeName</td>
-                            
+
                         </tr>
                     }
                 </tbody>
@@ -45,7 +90,54 @@
         </nav>
     </div>
 
+
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            // Load Wiliyats based on selected Region
+            $('#regions').change(function () {
+                var regionId = $(this).val();
+                if (regionId) {
+                    $.get('/Records/GetWiliyatsByRegion', { regionId: regionId }, function (data) {
+                        $('#wiliyats').empty().append('<option value="">Select a Wiliyat</option>');
+                        $.each(data, function (index, wiliyat) {
+                            $('#wiliyats').append('<option value="' + wiliyat.id + '">' + wiliyat.name + '</option>');
+                        });
+                    });
+                }
+            });
+
+            // Load Areas based on selected Wiliyat
+            $('#wiliyats').change(function () {
+                var wiliyatId = $(this).val();
+                if (wiliyatId) {
+                    $.get('/Records/GetAreasByWiliyat', { wiliyatId: wiliyatId }, function (data) {
+                        $('#areas').empty().append('<option value="">Select an Area</option>');
+                        $.each(data, function (index, area) {
+                            $('#areas').append('<option value="' + area.id + '">' + area.name + '</option>');
+                        });
+                    });
+                }
+            });
+
+            // Load Villages based on selected Area
+            $('#areas').change(function () {
+                var areaId = $(this).val();
+                if (areaId) {
+                    $.get('/Records/GetVillagesByArea', { areaId: areaId }, function (data) {
+                        $('#villages').empty().append('<option value="">Select a Village</option>');
+                        $.each(data, function (index, village) {
+                            $('#villages').append('<option value="' + village.id + '">' + village.name + '</option>');
+                        });
+                    });
+                }
+            });
+        });
+        </script>*@
+
     <script>
+
         const rowsPerPage = 5; // Number of rows to display per page
         let currentPage = 1;
         let filteredRows = [];
@@ -139,5 +231,9 @@
                 paginationControls.appendChild(paginationItem);
             }
         }
+
+       
     </script>
+
+     
 </body>

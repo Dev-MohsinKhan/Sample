@@ -11,6 +11,7 @@ namespace InterviewTask.ViewModels
         public List<Area> Areas { get; set; }
         public List<Village> Villages { get; set; }
         public List<EntityType> EntityType { get; set; }
+        public List<Item> Items{ get; set; }
 
         //[Required(ErrorMessage = "Please enter your name.")]
         public string Name { get; set; }
